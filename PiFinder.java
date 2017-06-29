@@ -6,17 +6,12 @@ import java.util.Random;
 public class PiFinder {
 
 	public static AtomicLong hits;
-	//public static AtomicLong total;
-	public static long end;
-	public static int numThreads;
-
-
+	
 	public static void main(String[] args) {
 
 		hits = new AtomicLong(0);
-		//total = new AtomicLong(0);
-		end = Long.parseLong(args[0]);
-		numThreads = Integer.parseInt(args[1]);
+		long end = Long.parseLong(args[0]);
+		int numThreads = Integer.parseInt(args[1]);
 
 		Thread[] threads = new Thread[numThreads];
 
@@ -28,10 +23,7 @@ public class PiFinder {
 
 		for (Thread thread : threads) {
 			thread.start();
-			//System.out.println(thread.isAlive());
 		}
-
-		
 
 		try {
 			for (Thread thread : threads) {
@@ -43,8 +35,6 @@ public class PiFinder {
 		System.out.println(end);
 
 		System.out.println(4 * ((float)hits.get() / end));
-
-
 	}
 	
 	public static long getPi(long myEnd) {
