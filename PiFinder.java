@@ -1,19 +1,20 @@
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class PiFinder {
 
-	public int hits;
-	public int total;
-	public int end;
-	public int numThreads;
+	public static AtomicInteger hits;
+	public static AtomicInteger total;
+	public static int end;
+	public static int numThreads;
 
 
 	public static void main(String[] args) {
 
-		hits = 0;
-		total = 0;
+		hits = new AtomicInteger(0);
+		total = new AtomicInteger(0);
 		end = Integer.parseInt(args[0]);
 		numThreads = Integer.parseInt(args[1]);
 
@@ -23,18 +24,18 @@ public class PiFinder {
 			threads.add(new Thread(() -> {
 				double x;
 				double y;
-				while (total < end) {	
+				while (total.get() < end) {	
 					x = ThreadLocalRandom.current().nextDouble();
 					x *= x;
 					y = ThreadLocalRandom.current().nextDouble();
 					y *= y;
-					if (total >= end) {
+					if (total.get() >= end) {
 						return;
 					} else {
 						if ((x + y) < 1) {
-							hits++;
+							hits.getAndIncrement();
 						}
-						total++;
+						total.getAndIncrement();
 					}
 				}
 			}));
@@ -42,7 +43,7 @@ public class PiFinder {
 
 		for (Thread thread : threads) {
 			thread.start();
-			System.out.println(thread.isAlive());
+			//System.out.println(thread.isAlive());
 		}
 
 		
@@ -53,10 +54,10 @@ public class PiFinder {
 			}
 		} catch (InterruptedException iex) { }
 
-		System.out.println(hits);
-		System.out.println(total);
+		System.out.println(hits.get());
+		System.out.println(total.get());
 
-		System.out.println(4 * (double)hits / total);
+		System.out.println(4 * ((double)hits.get() / total.get()));
 
 
 	}
